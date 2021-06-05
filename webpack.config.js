@@ -2,26 +2,36 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const EsLintPlugin = require('eslint-webpack-plugin');
 const DotEnvPlugin = require('dotenv-webpack');
+const MiniCss = require('mini-css-extract-plugin');
+const streamBrowserify = require('stream-browserify');
 
 const path = require('path');
 
 const config = {
     entry: {
-        app: path.resolve(__dirname, './src/index.tsx'),
+        app: path.join(__dirname, './src/index.tsx'),
+        root: path.join(__dirname, './src/root'),
+        theme: path.join(__dirname, './src/theme'),
     },
     output: {
-        path: path.resolve(__dirname, './dist'),
+        path: path.join(__dirname, './dist'),
         filename: '[name].bundle.js',
     },
-    target: 'web',
+    target: 'es6',
     resolve: {
-        alias: {},
-        extensions: ['.ts', '.tsx', '.js', '.jsx'],
+        modules: [path.resolve(__dirname, 'src'), 'node_modules'],
+        alias: {
+            components: path.resolve(__dirname, 'src/components'),
+        },
+        extensions: ['.tsx', '.ts', '.js', '.jsx'],
+        fallback: {
+            stream: false,
+        },
     },
-    devtool: 'cheap-module-source-map',
+    devtool: 'inline-source-map',
     devServer: {
         publicPath: '/',
-        port: 8080,
+        port: 6060,
         historyApiFallback: true,
         headers: {'Access-Control-Allow-Origin': '*'},
         hot: true,
@@ -31,16 +41,14 @@ const config = {
     module: {
         rules: [
             {
-                test: /\.(js|jsx)$/,
-                exclude: /(node_modules|bower_components)/,
-                use: {
-                    loader: 'babel-loader',
-                },
+                test: /\.(tsx|ts)$/,
+                loader: 'ts-loader',
+                exclude: /node_modules/,
             },
             {
-                test: /\.tsx$/,
-                use: 'ts-loader',
-                exclude: '/node_modules/',
+                test: /\.(js|jsx)$/,
+                exclude: /(node_modules|bower_components)/,
+                loader: 'babel-loader',
             },
             {test: /\.css$/, use: ['style-loader', 'css-loader']},
             {
@@ -63,9 +71,11 @@ const config = {
         }),
         new EsLintPlugin({
             context: path.join(__dirname, './src'),
-            extensions: ['js', 'jsx', 'ts', 'tsx'],
+            extensions: ['ts', 'tsx', 'js', 'jsx'],
         }),
+        new MiniCss(),
     ],
+    // stream: streamBrowserify,
 };
 
 module.exports = config;
