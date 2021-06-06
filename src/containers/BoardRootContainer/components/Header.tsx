@@ -36,7 +36,9 @@ export const Header = () => {
                 </Flex>
 
                 <Box>
-                    <Typography color="white.100">Agile Board</Typography>
+                    <Typography color="white.100" variant="h2">
+                        Agile Board
+                    </Typography>
                 </Box>
 
                 <Flex>

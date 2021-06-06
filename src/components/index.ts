@@ -6,3 +6,4 @@ export * from './Layout';
 export * from './Button';
 export * from './List';
 export * from './NavLink';
+export * from './Modal';
