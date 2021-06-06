@@ -3,40 +3,48 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const EsLintPlugin = require('eslint-webpack-plugin');
 const DotEnvPlugin = require('dotenv-webpack');
 const MiniCss = require('mini-css-extract-plugin');
-const streamBrowserify = require('stream-browserify');
 
 const path = require('path');
 
+const resolve = (dir) => path.resolve(__dirname, dir);
+
 const config = {
     entry: {
-        app: path.join(__dirname, './src/index.tsx'),
-        root: path.join(__dirname, './src/root'),
-        theme: path.join(__dirname, './src/theme'),
+        app: resolve('./src/index.tsx'),
+        root: resolve('./src/root'),
+        theme: resolve('./src/theme'),
+        routes: resolve('./src/routes'),
+        containers: resolve('./src/containers'),
+        components: resolve('./src/components'),
+        widgets: resolve('./src/widgets'),
     },
     output: {
         path: path.join(__dirname, './dist'),
-        filename: '[name].bundle.js',
+        filename: '[name].[hash].js',
     },
-    target: 'es6',
+    target: 'web',
     resolve: {
         modules: [path.resolve(__dirname, 'src'), 'node_modules'],
         alias: {
-            components: path.resolve(__dirname, 'src/components'),
+            components: resolve('src/components/'),
+            containers: resolve('src/containers/'),
+            routes: resolve('src/routes/'),
+            widgets: resolve('src/widgets/'),
         },
         extensions: ['.tsx', '.ts', '.js', '.jsx'],
         fallback: {
             stream: false,
         },
     },
-    devtool: 'inline-source-map',
+    devtool: 'source-map',
     devServer: {
-        publicPath: '/',
-        port: 6060,
+        port: 8080,
         historyApiFallback: true,
-        headers: {'Access-Control-Allow-Origin': '*'},
         hot: true,
-        overlay: false,
-        host: '127.0.0.1',
+        open: true,
+        contentBase: resolve('./dist'),
+        overlay: true,
+        stats: 'errors-only',
     },
     module: {
         rules: [
@@ -48,7 +56,9 @@ const config = {
             {
                 test: /\.(js|jsx)$/,
                 exclude: /(node_modules|bower_components)/,
-                loader: 'babel-loader',
+                use: {
+                    loader: 'babel-loader',
+                },
             },
             {test: /\.css$/, use: ['style-loader', 'css-loader']},
             {
@@ -75,7 +85,9 @@ const config = {
         }),
         new MiniCss(),
     ],
-    // stream: streamBrowserify,
+    optimization: {
+        runtimeChunk: 'single',
+    },
 };
 
 module.exports = config;

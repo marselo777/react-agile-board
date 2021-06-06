@@ -38,5 +38,10 @@ module.exports = {
         react: {
             version: 'detect',
         },
+        'import/resolver': {
+            alias: {
+                map: [['@', path.resolve(__dirname, 'src')]],
+            },
+        },
     },
 };
