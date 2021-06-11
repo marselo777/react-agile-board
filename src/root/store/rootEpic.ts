@@ -1,3 +1,5 @@
-import {combineEpics} from 'redux-observable';
+import {combineEpics, Epic} from 'redux-observable';
 
-export const rootEpic = combineEpics();
+import {boardEpics} from 'entities/board/boardEpic';
+
+export const rootEpic: Epic<any, any, any, any> = combineEpics(...boardEpics);

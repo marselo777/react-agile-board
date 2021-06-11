@@ -13,9 +13,13 @@ import {
     AiOutlineBell,
 } from 'react-icons/ai';
 
-export const Header = () => {
+export interface IHeaderProps {
+    bg?: string;
+}
+
+export const Header = ({bg}: IHeaderProps) => {
     return (
-        <Box bg="blue.900" maxHeight={42}>
+        <Box bg={bg} maxHeight={42}>
             <Flex justifyContent="space-between" alignItems="center" p={1}>
                 <Flex justifyContent="space-evenly">
                     <Button width={32} height={32} mr={1}>
@@ -58,4 +62,8 @@ export const Header = () => {
             </Flex>
         </Box>
     );
+};
+
+Header.defaultProps = {
+    bg: 'blue.900',
 };

@@ -29,6 +29,7 @@
         "importsNotUsedAsValues": "preserve",
         "incremental": true
     },
+    "typeRoots": ["src/@types"],
     "include": ["src/**/*", "src"],
     "exclude": ["**/node_modules", "**/.*/"]
 }

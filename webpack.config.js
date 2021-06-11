@@ -8,6 +8,8 @@ const path = require('path');
 
 const resolve = (dir) => path.resolve(__dirname, dir);
 
+const loaderImage = path.resolve(__dirname, './loaders/cjs.js');
+
 const config = {
     entry: {
         app: resolve('./src/index.tsx'),
@@ -17,19 +19,27 @@ const config = {
         containers: resolve('./src/containers'),
         components: resolve('./src/components'),
         widgets: resolve('./src/widgets'),
+        entities: resolve('./src/entities'),
     },
     output: {
-        path: path.join(__dirname, './dist'),
+        path: path.resolve(__dirname, './dist'),
         filename: '[name].[hash].js',
+        publicPath: '/',
     },
     target: 'web',
     resolve: {
-        modules: [path.resolve(__dirname, 'src'), 'node_modules'],
+        modules: [
+            path.resolve(__dirname, 'src'),
+            path.resolve(__dirname, 'loaders'),
+            'node_modules',
+        ],
         alias: {
             components: resolve('src/components/'),
             containers: resolve('src/containers/'),
             routes: resolve('src/routes/'),
             widgets: resolve('src/widgets/'),
+            entities: resolve('src/entities/'),
+            root: resolve('src/root/'),
         },
         extensions: ['.tsx', '.ts', '.js', '.jsx'],
         fallback: {
@@ -42,15 +52,15 @@ const config = {
         historyApiFallback: true,
         hot: true,
         open: true,
-        contentBase: resolve('./dist'),
-        overlay: true,
         stats: 'errors-only',
+        contentBase: path.join(__dirname, 'dist'),
+        contentBasePublicPath: '/',
     },
     module: {
         rules: [
             {
                 test: /\.(tsx|ts)$/,
-                loader: 'ts-loader',
+                use: ['ts-loader'],
                 exclude: /node_modules/,
             },
             {
